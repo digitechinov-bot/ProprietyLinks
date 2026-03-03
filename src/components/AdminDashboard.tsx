@@ -25,13 +25,29 @@ import {
   Briefcase,
   PieChart,
   CreditCard,
-  Plus
+  Plus,
+  Receipt,
+  Calculator,
+  BookOpen,
+  UserPlus,
+  Menu,
+  X,
+  LayoutDashboard,
+  Target,
+  FileCheck,
+  UserCircle,
+  LogOut,
+  Search
 } from "lucide-react";
 
 import { UKCompanyFormation } from "./UKCompanyFormation";
 import { InvoiceGenerator } from "./InvoiceGenerator";
+import { ProposalGenerator } from "./ProposalGenerator";
 import { ClientManager } from "./ClientManager";
 import { ProjectTracker } from "./ProjectTracker";
+import { ExpenseTracker } from "./ExpenseTracker";
+import { AccountingHub } from "./AccountingHub";
+import { UserGuide } from "./UserGuide";
 
 interface Lead {
   id: string;
@@ -48,9 +64,12 @@ interface Lead {
 
 export const AdminDashboard = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [activeTab, setActiveTab] = useState<'overview' | 'leads' | 'clients' | 'projects' | 'invoices' | 'automation' | 'formation' | 'strategy'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'leads' | 'clients' | 'projects' | 'proposals' | 'invoices' | 'expenses' | 'accounting' | 'automation' | 'formation' | 'strategy' | 'guide' | 'settings'>('overview');
   const [webhookUrl, setWebhookUrl] = useState("https://n8n.digitechinov.com/webhook/propriety-links");
   const [isAiActive, setIsAiActive] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [autoOpenModal, setAutoOpenModal] = useState<string | null>(null);
+  const [modalData, setModalData] = useState<any>(null);
 
   useEffect(() => {
     const savedLeads = localStorage.getItem('moustapha_leads');
@@ -93,84 +112,245 @@ export const AdminDashboard = () => {
     return `https://wa.me/${lead.phone.replace(/\s/g, '')}?text=${encodeURIComponent(message)}`;
   };
 
+  const convertToClient = (lead: Lead) => {
+    // In a real app, this would call an API. For now, we simulate by updating local storage.
+    const existingClients = JSON.parse(localStorage.getItem('propriety_clients') || '[]');
+    const newClient = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      address: 'Address from lead...',
+      totalProjects: 1,
+      totalSpent: 0,
+      lastActive: new Date().toISOString(),
+      status: 'Active'
+    };
+    localStorage.setItem('propriety_clients', JSON.stringify([...existingClients, newClient]));
+    
+    // Remove from leads
+    const updatedLeads = leads.filter(l => l.id !== lead.id);
+    setLeads(updatedLeads);
+    localStorage.setItem('moustapha_leads', JSON.stringify(updatedLeads));
+    
+    alert(`${lead.name} has been converted to a client!`);
+    setActiveTab('clients');
+  };
+
+  const menuGroups = [
+    {
+      title: "Main",
+      items: [
+        { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+      ]
+    },
+    {
+      title: "Growth",
+      items: [
+        { id: 'leads', label: 'Leads', icon: Target },
+        { id: 'proposals', label: 'Proposals', icon: FileText },
+      ]
+    },
+    {
+      title: "Operations",
+      items: [
+        { id: 'clients', label: 'Clients', icon: Users },
+        { id: 'projects', label: 'Projects', icon: Briefcase },
+      ]
+    },
+    {
+      title: "Finance",
+      items: [
+        { id: 'invoices', label: 'Invoices', icon: FileCheck },
+        { id: 'expenses', label: 'Expenses', icon: Receipt },
+        { id: 'accounting', label: 'Accounting', icon: Calculator },
+      ]
+    },
+    {
+      title: "System",
+      items: [
+        { id: 'guide', label: 'User Guide', icon: BookOpen },
+        { id: 'settings', label: 'Settings', icon: Settings },
+      ]
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F8F9FA] font-sans text-slate-900">
-      {/* Top Navigation Bar */}
-      <nav className="bg-charcoal text-white sticky top-0 z-50 border-b border-white/10">
-        <div className="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <a href="/" className="group flex items-center gap-3">
-              <div className="w-10 h-10 bg-gold rounded-lg flex items-center justify-center text-charcoal group-hover:rotate-12 transition-transform">
-                <Settings className="w-6 h-6" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold tracking-tight leading-none">COMMAND CENTRE</h1>
-                <p className="text-[10px] text-gold font-mono uppercase tracking-widest mt-1">ProprietyLinks v2.0</p>
-              </div>
-            </a>
-            <div className="h-8 w-px bg-white/10 hidden md:block" />
-            <div className="hidden lg:flex items-center gap-1">
-              {[
-                { id: 'overview', label: 'Overview', icon: PieChart },
-                { id: 'leads', label: 'Leads', icon: Users },
-                { id: 'clients', label: 'Clients', icon: Users },
-                { id: 'projects', label: 'Projects', icon: Briefcase },
-                { id: 'invoices', label: 'Invoices', icon: FileText },
-                { id: 'automation', label: 'AI & Automation', icon: Zap },
-                { id: 'formation', label: 'UK Formation', icon: Building2 },
-                { id: 'strategy', label: 'Strategy', icon: TrendingUp },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-3 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${
-                    activeTab === tab.id 
-                      ? 'bg-gold text-charcoal shadow-lg shadow-gold/20' 
-                      : 'text-white/60 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <tab.icon className="w-4 h-4" />
-                  <span className="hidden xl:inline">{tab.label}</span>
-                </button>
-              ))}
+    <div className="min-h-screen bg-[#F8F9FA] flex">
+      {/* Sidebar Navigation */}
+      <aside 
+        className={`${
+          isSidebarOpen ? 'w-72' : 'w-20'
+        } bg-charcoal text-white transition-all duration-300 flex flex-col sticky top-0 h-screen z-50 border-r border-white/5`}
+      >
+        {/* Sidebar Header */}
+        <div className="p-6 flex items-center justify-between border-b border-white/5">
+          <div className={`flex items-center gap-3 ${!isSidebarOpen && 'hidden'}`}>
+            <div className="w-8 h-8 bg-gold rounded-lg flex items-center justify-center text-charcoal">
+              <Settings className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-sm font-bold tracking-tight">COMMAND CENTRE</h1>
+              <p className="text-[8px] text-gold font-mono uppercase tracking-widest">v2.0</p>
             </div>
           </div>
+          <button 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 hover:bg-white/5 rounded-lg transition-colors text-white/60 hover:text-white"
+          >
+            {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
 
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest">System Live</span>
-            </div>
-            <button className="p-2 text-white/60 hover:text-white transition-colors relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-gold rounded-full border-2 border-charcoal" />
+        {/* Quick Launch Actions */}
+        {isSidebarOpen && (
+          <div className="px-6 py-6 border-b border-white/5 space-y-3">
+            <button 
+              onClick={() => {
+                setActiveTab('clients');
+                setAutoOpenModal('client');
+              }}
+              className="w-full flex items-center gap-3 p-3 rounded-xl bg-gold text-charcoal hover:bg-gold-light transition-all text-xs font-bold shadow-lg shadow-gold/20 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-charcoal/10 flex items-center justify-center group-hover:bg-charcoal/20 transition-colors">
+                <UserPlus className="w-4 h-4" />
+              </div>
+              New Client
+            </button>
+            <button 
+              onClick={() => {
+                setActiveTab('projects');
+                setAutoOpenModal('project');
+              }}
+              className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all text-xs font-bold border border-white/10 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                <Plus className="w-4 h-4 text-gold" />
+              </div>
+              New Project
             </button>
           </div>
-        </div>
-      </nav>
+        )}
 
-      <main className="max-w-[1600px] mx-auto p-6 md:p-10">
+        {/* Sidebar Navigation Items */}
+        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8 custom-scrollbar">
+          {menuGroups.map((group, idx) => (
+            <div key={idx} className="space-y-2">
+              {isSidebarOpen && (
+                <p className="px-4 text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-4">
+                  {group.title}
+                </p>
+              )}
+              <div className="space-y-1">
+                {group.items.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id as any)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${
+                      activeTab === item.id 
+                        ? 'bg-gold text-charcoal shadow-lg shadow-gold/10' 
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <item.icon className={`w-5 h-5 flex-shrink-0 ${activeTab === item.id ? 'text-charcoal' : 'group-hover:text-gold'}`} />
+                    {isSidebarOpen && (
+                      <span className="text-sm font-bold flex-1 text-left">{item.label}</span>
+                    )}
+                    {isSidebarOpen && activeTab === item.id && (
+                      <ChevronRight className="w-4 h-4 opacity-50" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t border-white/5">
+          <div className={`flex items-center gap-3 p-3 rounded-xl bg-white/5 ${!isSidebarOpen && 'justify-center'}`}>
+            <div className="w-8 h-8 bg-gold/20 rounded-full flex items-center justify-center text-gold">
+              <UserCircle className="w-5 h-5" />
+            </div>
+            {isSidebarOpen && (
+              <div className="flex-1 overflow-hidden text-left">
+                <p className="text-xs font-bold truncate">Admin User</p>
+                <p className="text-[10px] text-white/40 truncate">digitechinov@gmail.com</p>
+              </div>
+            )}
+            {isSidebarOpen && (
+              <button className="p-1.5 hover:bg-white/10 rounded-lg text-white/40 hover:text-white transition-colors">
+                <LogOut className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top Header */}
+        <header className="h-20 bg-white border-b border-slate-200 sticky top-0 z-40 px-8 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-bold text-slate-900 capitalize">
+              {activeTab.replace('-', ' ')}
+            </h2>
+            <div className="h-4 w-px bg-slate-200" />
+            <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest">System Live</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <div className="relative hidden md:block">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Search everything..."
+                className="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-gold outline-none w-64 transition-all"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="p-2.5 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-all relative">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-2 right-2 w-2 h-2 bg-gold rounded-full border-2 border-white" />
+              </button>
+              <button className="p-2.5 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-all">
+                <Settings className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Content Viewport */}
+        <main className="flex-1 p-8 md:p-12 overflow-y-auto custom-scrollbar">
+          <div className="max-w-7xl mx-auto">
         {activeTab === 'overview' && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { label: 'Monthly Revenue', value: '£34,200', icon: CreditCard, color: 'blue', trend: '+12%' },
-                { label: 'Pending Invoices', value: '£8,450', icon: FileText, color: 'orange', trend: '3 items' },
-                { label: 'Active Projects', value: '5', icon: Briefcase, color: 'gold', trend: '+1 this week' },
-                { label: 'Client Satisfaction', value: '98%', icon: CheckCircle2, color: 'green', trend: '48 reviews' },
-              ].map((stat, i) => (
-                <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group hover:border-gold/50 transition-all">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className={`p-3 rounded-xl bg-slate-50 text-slate-600 group-hover:scale-110 transition-transform`}>
-                      <stat.icon className="w-6 h-6" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {[
+                    { label: 'Total Revenue (YTD)', value: '£34,200', icon: CreditCard, color: 'blue', trend: '+12%' },
+                    { label: 'Total Expenses', value: '£12,450', icon: Receipt, color: 'red', trend: '36% of rev' },
+                    { label: 'Active Projects', value: '8', icon: Briefcase, color: 'gold', trend: '3 near completion' },
+                    { label: 'Net Profit', value: '£13,268', icon: TrendingUp, color: 'green', trend: 'Ready for HMRC' },
+                  ].map((stat, i) => (
+                    <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group hover:border-gold/50 transition-all">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className={`p-3 rounded-xl bg-slate-50 text-slate-400 group-hover:bg-gold/10 group-hover:text-gold transition-all`}>
+                          <stat.icon className="w-6 h-6" />
+                        </div>
+                        <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${
+                          stat.trend.startsWith('+') ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {stat.trend}
+                        </span>
+                      </div>
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
+                      <h4 className="text-2xl font-bold text-slate-900">{stat.value}</h4>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{stat.trend}</span>
-                  </div>
-                  <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
-                  <h3 className="text-3xl font-bold text-slate-900 mt-1">{stat.value}</h3>
+                  ))}
                 </div>
-              ))}
-            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
@@ -200,6 +380,37 @@ export const AdminDashboard = () => {
               </div>
 
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-gold" />
+                  Recommended Workflow
+                </h3>
+                <div className="space-y-4">
+                  {[
+                    { step: 1, action: 'Review New Leads', desc: 'Check incoming requests from your website.', tab: 'leads' },
+                    { step: 2, action: 'Manage Clients', desc: 'Convert leads or add new clients manually.', tab: 'clients' },
+                    { step: 3, action: 'Create Project', desc: 'Launch a new job and track its site progress.', tab: 'projects' },
+                    { step: 4, action: 'Issue Invoice', desc: 'Bill your clients and mark them as paid.', tab: 'invoices' },
+                    { step: 5, action: 'Log Expenses', desc: 'Record material costs for tax deduction.', tab: 'expenses' },
+                    { step: 6, action: 'Accounting Hub', desc: 'Check your tax liabilities and profit.', tab: 'accounting' },
+                  ].map((item, i) => (
+                    <button 
+                      key={i} 
+                      onClick={() => setActiveTab(item.tab as any)}
+                      className="w-full flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 transition-all text-left border border-transparent hover:border-slate-100"
+                    >
+                      <div className="w-6 h-6 bg-gold/10 text-gold-dark rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">
+                        {item.step}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-900">{item.action}</p>
+                        <p className="text-xs text-slate-500">{item.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 lg:col-span-2">
                 <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
                   <Clock className="w-5 h-5 text-gold" />
                   Recent Activity
@@ -318,6 +529,14 @@ export const AdminDashboard = () => {
                         </td>
                         <td className="px-8 py-6 text-right">
                           <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                            <button 
+                              onClick={() => convertToClient(lead)}
+                              className="flex items-center gap-2 px-4 py-2 bg-gold text-charcoal text-xs font-bold rounded-lg hover:bg-gold-light transition-all shadow-lg shadow-gold/10"
+                              title="Convert to Client"
+                            >
+                              <UserPlus className="w-4 h-4" />
+                              Convert
+                            </button>
                             <a 
                               href={getWhatsAppLink(lead)}
                               target="_blank"
@@ -327,7 +546,10 @@ export const AdminDashboard = () => {
                               <MessageSquare className="w-4 h-4" />
                               WhatsApp
                             </a>
-                            <button className="p-2 bg-white border border-slate-200 text-slate-400 rounded-lg hover:text-slate-900 hover:border-slate-900 transition-all">
+                            <button 
+                              className="p-2 bg-white border border-slate-200 text-slate-400 rounded-lg hover:text-slate-900 hover:border-slate-900 transition-all"
+                              title="View Full Lead Details"
+                            >
                               <ExternalLink className="w-4 h-4" />
                             </button>
                           </div>
@@ -400,9 +622,91 @@ export const AdminDashboard = () => {
           </div>
         )}
 
-        {activeTab === 'clients' && <ClientManager />}
-        {activeTab === 'projects' && <ProjectTracker />}
-        {activeTab === 'invoices' && <InvoiceGenerator />}
+        {activeTab === 'clients' && (
+          <ClientManager 
+            autoOpen={autoOpenModal === 'client'} 
+            onModalClose={() => {
+              setAutoOpenModal(null);
+              setModalData(null);
+            }} 
+            onAction={(action, data) => {
+              if (action === 'create-project') {
+                setActiveTab('projects');
+                setAutoOpenModal('project');
+                setModalData(data);
+              }
+            }}
+          />
+        )}
+        {activeTab === 'projects' && (
+          <ProjectTracker 
+            autoOpen={autoOpenModal === 'project'} 
+            initialData={modalData}
+            onModalClose={() => {
+              setAutoOpenModal(null);
+              setModalData(null);
+            }} 
+            onAction={(action) => setActiveTab(action as any)}
+          />
+        )}
+        {activeTab === 'proposals' && <ProposalGenerator clients={JSON.parse(localStorage.getItem('propriety_clients') || '[]')} />}
+        {activeTab === 'invoices' && <InvoiceGenerator clients={JSON.parse(localStorage.getItem('propriety_clients') || '[]')} />}
+        {activeTab === 'expenses' && <ExpenseTracker />}
+        {activeTab === 'accounting' && <AccountingHub />}
+        {activeTab === 'guide' && <UserGuide />}
+
+        {activeTab === 'settings' && (
+          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+              <h3 className="text-xl font-bold mb-2 text-slate-900">Business Settings & Growth Hub</h3>
+              <p className="text-slate-500 text-sm">Configure your agency and access advanced growth tools.</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { id: 'automation', label: 'AI & Automation', icon: Zap, desc: 'Connect n8n & AI Agents' },
+                { id: 'formation', label: 'UK Formation', icon: Building2, desc: 'Register new companies' },
+                { id: 'strategy', label: 'Strategy', icon: TrendingUp, desc: 'Agency growth tactics' },
+              ].map((item) => (
+                <button 
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id as any)}
+                  className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:border-gold transition-all text-left space-y-4 group"
+                >
+                  <div className="p-4 bg-slate-50 text-slate-600 rounded-2xl group-hover:bg-gold/10 group-hover:text-gold transition-colors w-fit">
+                    <item.icon className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900">{item.label}</h3>
+                    <p className="text-xs text-slate-500">{item.desc}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+              <h4 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6">General Preferences</h4>
+              <div className="space-y-6">
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                  <div>
+                    <p className="text-sm font-bold text-slate-900">Email Notifications</p>
+                    <p className="text-xs text-slate-500">Receive alerts for new leads and paid invoices.</p>
+                  </div>
+                  <div className="w-10 h-5 bg-gold rounded-full relative">
+                    <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full" />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                  <div>
+                    <p className="text-sm font-bold text-slate-900">Currency Display</p>
+                    <p className="text-xs text-slate-500">Set your primary currency for accounting.</p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">GBP (£)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {activeTab === 'automation' && (
           <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -555,7 +859,9 @@ export const AdminDashboard = () => {
             </section>
           </div>
         )}
-      </main>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

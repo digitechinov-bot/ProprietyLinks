@@ -763,10 +763,10 @@ const Footer = () => {
           {/* Secret Admin Access Point */}
           <a 
             href="/admin" 
-            className="opacity-0 hover:opacity-20 text-[8px] cursor-default ml-1 select-none"
-            aria-hidden="true"
+            className="opacity-10 hover:opacity-100 transition-opacity ml-1 mt-1"
+            title="Admin Access"
           >
-            .
+            <div className="w-1 h-1 bg-white/20 rounded-full"></div>
           </a>
         </div>
         
@@ -775,6 +775,7 @@ const Footer = () => {
         </p>
         
         <div className="flex gap-6 text-[10px] uppercase tracking-widest text-white/40 font-mono">
+          <a href="/admin" className="opacity-20 hover:opacity-100 transition-opacity">Management</a>
           <a href="/proposal" className="hover:text-gold transition-colors">View Proposal PDF</a>
           <a href="#" rel="noopener" className="hover:text-gold transition-colors">Privacy Policy</a>
           <a href="#" rel="noopener" className="hover:text-gold transition-colors">Terms of Service</a>

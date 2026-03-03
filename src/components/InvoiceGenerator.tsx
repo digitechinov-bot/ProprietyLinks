@@ -9,7 +9,10 @@ import {
   User,
   Calendar,
   Hash,
-  CreditCard
+  CreditCard,
+  Send,
+  CheckCircle,
+  Mail
 } from "lucide-react";
 
 interface InvoiceItem {
@@ -32,7 +35,7 @@ interface Invoice {
   notes: string;
 }
 
-export const InvoiceGenerator = () => {
+export const InvoiceGenerator = ({ clients = [] }: { clients?: any[] }) => {
   const [invoice, setInvoice] = useState<Invoice>({
     id: Math.random().toString(36).substr(2, 9),
     invoiceNumber: `INV-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -45,6 +48,23 @@ export const InvoiceGenerator = () => {
     status: 'Draft',
     notes: "Thank you for your business!"
   });
+
+  const handleClientSelect = (clientName: string) => {
+    const selectedClient = clients.find(c => c.name === clientName);
+    if (selectedClient) {
+      setInvoice({
+        ...invoice,
+        clientName: selectedClient.name,
+        clientEmail: selectedClient.email || '',
+        clientAddress: selectedClient.address || ''
+      });
+    } else {
+      setInvoice({ ...invoice, clientName });
+    }
+  };
+
+  const [isSending, setIsSending] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
 
   const addItem = () => {
     setInvoice({
@@ -67,6 +87,26 @@ export const InvoiceGenerator = () => {
     });
   };
 
+  const handleSendEmail = () => {
+    setIsSending(true);
+    // Simulate email sending
+    setTimeout(() => {
+      setIsSending(false);
+      alert(`Invoice ${invoice.invoiceNumber} has been sent to ${invoice.clientEmail || 'the client'}`);
+    }, 1500);
+  };
+
+  const handleMarkAsPaid = () => {
+    setIsPaid(true);
+    setInvoice({ ...invoice, status: 'Paid' });
+  };
+
+  const handleSaveInvoice = () => {
+    const savedInvoices = JSON.parse(localStorage.getItem('propriety_invoices') || '[]');
+    localStorage.setItem('propriety_invoices', JSON.stringify([...savedInvoices, invoice]));
+    alert(`Invoice ${invoice.invoiceNumber} has been saved.`);
+  };
+
   const subtotal = invoice.items.reduce((acc, item) => acc + (item.quantity * item.rate), 0);
   const vat = subtotal * 0.2;
   const total = subtotal + vat;
@@ -79,9 +119,36 @@ export const InvoiceGenerator = () => {
           <p className="text-slate-500 text-sm">Create professional invoices for your clients.</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm">
+          <button 
+            onClick={handleMarkAsPaid}
+            disabled={isPaid}
+            className={`flex items-center gap-2 px-4 py-2 border rounded-xl transition-all font-bold text-sm ${
+              isPaid 
+                ? 'bg-green-50 border-green-200 text-green-600' 
+                : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            {isPaid ? <CheckCircle className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
+            {isPaid ? 'Paid' : 'Mark Paid'}
+          </button>
+          <button 
+            onClick={handleSaveInvoice}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl transition-all font-bold text-sm"
+          >
             <Save className="w-4 h-4" />
             Save Draft
+          </button>
+          <button 
+            onClick={handleSendEmail}
+            disabled={isSending}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-sm shadow-lg shadow-blue-100 disabled:opacity-50"
+          >
+            {isSending ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <Send className="w-4 h-4" />
+            )}
+            {isSending ? 'Sending...' : 'Send Email'}
           </button>
           <button 
             onClick={() => window.print()}
@@ -105,13 +172,27 @@ export const InvoiceGenerator = () => {
                   Client Information
                 </h3>
                 <div className="space-y-3">
-                  <input 
-                    type="text" 
-                    placeholder="Client Name"
-                    className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
-                    value={invoice.clientName}
-                    onChange={(e) => setInvoice({...invoice, clientName: e.target.value})}
-                  />
+                  {clients.length > 0 ? (
+                    <select 
+                      className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
+                      value={invoice.clientName}
+                      onChange={(e) => handleClientSelect(e.target.value)}
+                    >
+                      <option value="">Select Existing Client...</option>
+                      {clients.map(c => (
+                        <option key={c.id} value={c.name}>{c.name}</option>
+                      ))}
+                      <option value="custom">+ Add New Client Manually</option>
+                    </select>
+                  ) : (
+                    <input 
+                      type="text" 
+                      placeholder="Client Name"
+                      className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
+                      value={invoice.clientName}
+                      onChange={(e) => setInvoice({...invoice, clientName: e.target.value})}
+                    />
+                  )}
                   <input 
                     type="email" 
                     placeholder="Client Email"
@@ -207,6 +288,7 @@ export const InvoiceGenerator = () => {
                     <button 
                       onClick={() => removeItem(item.id)}
                       className="p-3 text-slate-300 hover:text-red-500 transition-colors"
+                      title="Remove Item"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -270,11 +352,17 @@ export const InvoiceGenerator = () => {
           <div className="bg-white p-6 rounded-2xl border border-slate-200">
             <h4 className="text-sm font-bold mb-4">Quick Actions</h4>
             <div className="grid grid-cols-2 gap-3">
-              <button className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all group">
+              <button 
+                className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all group"
+                title="Download as PDF"
+              >
                 <Download className="w-5 h-5 text-slate-400 group-hover:text-slate-900" />
                 <span className="text-[10px] font-bold uppercase tracking-widest">Download</span>
               </button>
-              <button className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all group">
+              <button 
+                className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all group"
+                title="Schedule Payment Reminder"
+              >
                 <Calendar className="w-5 h-5 text-slate-400 group-hover:text-slate-900" />
                 <span className="text-[10px] font-bold uppercase tracking-widest">Schedule</span>
               </button>
