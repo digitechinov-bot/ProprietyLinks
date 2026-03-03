@@ -750,7 +750,7 @@ const Footer = () => {
         </div>
 
       <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-white/5 gap-8">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center md:items-start gap-1">
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="flex items-center gap-2 cursor-pointer group"
@@ -760,6 +760,14 @@ const Footer = () => {
             </div>
             <span className="font-serif text-sm font-bold tracking-tight">PROPRIETYLINKS</span>
           </button>
+          {/* Secret Admin Access Point */}
+          <a 
+            href="/admin" 
+            className="opacity-0 hover:opacity-20 text-[8px] cursor-default ml-1 select-none"
+            aria-hidden="true"
+          >
+            .
+          </a>
         </div>
         
         <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-mono">
@@ -767,7 +775,6 @@ const Footer = () => {
         </p>
         
         <div className="flex gap-6 text-[10px] uppercase tracking-widest text-white/40 font-mono">
-          <a href="/admin" className="hover:text-gold transition-colors text-gold/60">Admin Command Centre</a>
           <a href="/proposal" className="hover:text-gold transition-colors">View Proposal PDF</a>
           <a href="#" rel="noopener" className="hover:text-gold transition-colors">Privacy Policy</a>
           <a href="#" rel="noopener" className="hover:text-gold transition-colors">Terms of Service</a>

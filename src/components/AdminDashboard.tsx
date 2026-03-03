@@ -20,10 +20,18 @@ import {
   Shield,
   Bell,
   Info,
-  Building2
+  Building2,
+  FileText,
+  Briefcase,
+  PieChart,
+  CreditCard,
+  Plus
 } from "lucide-react";
 
 import { UKCompanyFormation } from "./UKCompanyFormation";
+import { InvoiceGenerator } from "./InvoiceGenerator";
+import { ClientManager } from "./ClientManager";
+import { ProjectTracker } from "./ProjectTracker";
 
 interface Lead {
   id: string;
@@ -40,7 +48,7 @@ interface Lead {
 
 export const AdminDashboard = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [activeTab, setActiveTab] = useState<'leads' | 'growth' | 'automation' | 'strategy' | 'formation'>('leads');
+  const [activeTab, setActiveTab] = useState<'overview' | 'leads' | 'clients' | 'projects' | 'invoices' | 'automation' | 'formation' | 'strategy'>('overview');
   const [webhookUrl, setWebhookUrl] = useState("https://n8n.digitechinov.com/webhook/propriety-links");
   const [isAiActive, setIsAiActive] = useState(true);
 
@@ -103,23 +111,26 @@ export const AdminDashboard = () => {
             <div className="h-8 w-px bg-white/10 hidden md:block" />
             <div className="hidden lg:flex items-center gap-1">
               {[
+                { id: 'overview', label: 'Overview', icon: PieChart },
                 { id: 'leads', label: 'Leads', icon: Users },
-                { id: 'growth', label: 'Growth Pack Demo', icon: Layout },
+                { id: 'clients', label: 'Clients', icon: Users },
+                { id: 'projects', label: 'Projects', icon: Briefcase },
+                { id: 'invoices', label: 'Invoices', icon: FileText },
                 { id: 'automation', label: 'AI & Automation', icon: Zap },
                 { id: 'formation', label: 'UK Formation', icon: Building2 },
-                { id: 'strategy', label: 'Agency Strategy', icon: TrendingUp },
+                { id: 'strategy', label: 'Strategy', icon: TrendingUp },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${
+                  className={`px-3 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${
                     activeTab === tab.id 
                       ? 'bg-gold text-charcoal shadow-lg shadow-gold/20' 
                       : 'text-white/60 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
-                  {tab.label}
+                  <span className="hidden xl:inline">{tab.label}</span>
                 </button>
               ))}
             </div>
@@ -139,6 +150,84 @@ export const AdminDashboard = () => {
       </nav>
 
       <main className="max-w-[1600px] mx-auto p-6 md:p-10">
+        {activeTab === 'overview' && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { label: 'Monthly Revenue', value: '£34,200', icon: CreditCard, color: 'blue', trend: '+12%' },
+                { label: 'Pending Invoices', value: '£8,450', icon: FileText, color: 'orange', trend: '3 items' },
+                { label: 'Active Projects', value: '5', icon: Briefcase, color: 'gold', trend: '+1 this week' },
+                { label: 'Client Satisfaction', value: '98%', icon: CheckCircle2, color: 'green', trend: '48 reviews' },
+              ].map((stat, i) => (
+                <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group hover:border-gold/50 transition-all">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className={`p-3 rounded-xl bg-slate-50 text-slate-600 group-hover:scale-110 transition-transform`}>
+                      <stat.icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{stat.trend}</span>
+                  </div>
+                  <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
+                  <h3 className="text-3xl font-bold text-slate-900 mt-1">{stat.value}</h3>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-gold" />
+                  Revenue Growth
+                </h3>
+                <div className="h-64 flex items-end gap-2">
+                  {[45, 60, 40, 75, 90, 85, 100].map((height, i) => (
+                    <div key={i} className="flex-1 bg-slate-100 rounded-t-lg relative group">
+                      <div 
+                        className="absolute bottom-0 left-0 right-0 bg-gold rounded-t-lg transition-all duration-1000 group-hover:bg-gold-dark" 
+                        style={{ height: `${height}%` }}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-between mt-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <span>Mon</span>
+                  <span>Tue</span>
+                  <span>Wed</span>
+                  <span>Thu</span>
+                  <span>Fri</span>
+                  <span>Sat</span>
+                  <span>Sun</span>
+                </div>
+              </div>
+
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-gold" />
+                  Recent Activity
+                </h3>
+                <div className="space-y-6">
+                  {[
+                    { action: 'Invoice Paid', target: 'James Kensington', time: '2 hours ago', icon: CreditCard, color: 'green' },
+                    { action: 'New Lead', target: 'Sarah Miller', time: '5 hours ago', icon: Users, color: 'blue' },
+                    { action: 'Project Updated', target: 'Kitchen Renovation', time: '1 day ago', icon: Briefcase, color: 'gold' },
+                    { action: 'Quote Sent', target: 'Robert Wilson', time: '2 days ago', icon: FileText, color: 'purple' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-4">
+                      <div className={`p-2 rounded-lg bg-slate-50 text-slate-600`}>
+                        <item.icon className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-slate-900">{item.action}</p>
+                        <p className="text-xs text-slate-500">{item.target}</p>
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{item.time}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'leads' && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Stats Overview */}
@@ -310,6 +399,10 @@ export const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {activeTab === 'clients' && <ClientManager />}
+        {activeTab === 'projects' && <ProjectTracker />}
+        {activeTab === 'invoices' && <InvoiceGenerator />}
 
         {activeTab === 'automation' && (
           <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
