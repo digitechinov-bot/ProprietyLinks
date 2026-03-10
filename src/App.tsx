@@ -18,6 +18,7 @@ import {
 } from "./components/LandingPage";
 import { Proposal } from "./components/Proposal";
 import { AdminDashboard } from "./components/AdminDashboard";
+import { LicenseGuard } from "./components/LicenseGuard";
 
 export default function App() {
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
@@ -37,7 +38,11 @@ export default function App() {
   }
 
   if (path === '/admin') {
-    return <AdminDashboard />;
+    return (
+      <LicenseGuard>
+        <AdminDashboard />
+      </LicenseGuard>
+    );
   }
 
   return (

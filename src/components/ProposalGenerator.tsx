@@ -34,7 +34,7 @@ interface ProposalData {
   status: 'Draft' | 'Sent' | 'Accepted' | 'Declined';
 }
 
-export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
+export const ProposalGenerator = ({ clients = [], theme = 'dark' }: { clients?: any[], theme?: 'dark' | 'light' }) => {
   const [proposal, setProposal] = useState<ProposalData>({
     proposalNumber: `PROP-${Math.floor(1000 + Math.random() * 9000)}`,
     clientName: "",
@@ -105,16 +105,18 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
   const total = subtotal + vat;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className={`space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Proposal Generator</h2>
-          <p className="text-slate-500 text-sm">Create professional quotes for your leads and prospects.</p>
+          <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Proposal Generator</h2>
+          <p className={`${theme === 'dark' ? 'text-white/40' : 'text-slate-500'} text-sm`}>Create professional quotes for your leads and prospects.</p>
         </div>
         <div className="flex gap-3">
           <button 
             onClick={handleSaveProposal}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl transition-all font-bold text-sm"
+            className={`flex items-center gap-2 px-4 py-2 border rounded-xl transition-all font-bold text-sm ${
+              theme === 'dark' ? 'bg-white/5 border-white/10 text-white/60 hover:bg-gold/10 hover:text-gold' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+            }`}
           >
             <Save className="w-4 h-4" />
             Save Draft
@@ -122,10 +124,10 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
           <button 
             onClick={handleSendEmail}
             disabled={isSending}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-sm shadow-lg shadow-blue-100 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 bg-gold text-charcoal rounded-xl hover:bg-gold-light transition-all font-bold text-sm shadow-lg shadow-gold/20 disabled:opacity-50"
           >
             {isSending ? (
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-charcoal/30 border-t-charcoal rounded-full animate-spin" />
             ) : (
               <Send className="w-4 h-4" />
             )}
@@ -133,7 +135,9 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
           </button>
           <button 
             onClick={() => window.print()}
-            className="flex items-center gap-2 px-6 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-all font-bold text-sm shadow-lg shadow-slate-200"
+            className={`flex items-center gap-2 px-6 py-2 rounded-xl transition-all font-bold text-sm shadow-lg ${
+              theme === 'dark' ? 'bg-white/10 text-white hover:bg-white/20 shadow-black/20' : 'bg-slate-900 text-white hover:bg-slate-800 shadow-slate-900/20'
+            }`}
           >
             <Printer className="w-4 h-4" />
             Print / PDF
@@ -143,46 +147,52 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-8">
+          <div className={`p-8 rounded-3xl border shadow-sm space-y-8 ${
+            theme === 'dark' ? 'bg-[#0A0A0A] border-white/5' : 'bg-white border-slate-200'
+          }`}>
             {/* Header */}
-            <div className="flex justify-between items-start border-b border-slate-100 pb-8">
+            <div className={`flex justify-between items-start border-b pb-8 ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
               <div className="space-y-1">
-                <h3 className="text-2xl font-serif font-bold italic text-gold-dark">PROPOSAL</h3>
-                <div className="flex items-center gap-2 text-slate-400 text-xs font-mono">
+                <h3 className="text-2xl font-serif font-bold italic text-gold">PROPOSAL</h3>
+                <div className={`flex items-center gap-2 text-xs font-mono ${theme === 'dark' ? 'text-white/20' : 'text-slate-300'}`}>
                   <Hash className="w-3 h-3" />
                   {proposal.proposalNumber}
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-bold text-slate-900">ProprietyLinks Ltd</div>
-                <div className="text-xs text-slate-500">London, United Kingdom</div>
+                <div className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>ProprietyLinks Ltd</div>
+                <div className={`text-xs ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>London, United Kingdom</div>
               </div>
             </div>
 
             {/* Client Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                <label className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
                   <User className="w-3 h-3" />
                   Client Details
                 </label>
                 {clients.length > 0 ? (
                   <select 
-                    className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
+                    className={`w-full border p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm ${
+                      theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                    }`}
                     value={proposal.clientName}
                     onChange={(e) => handleClientSelect(e.target.value)}
                   >
-                    <option value="">Select Existing Client...</option>
+                    <option value="" className={theme === 'dark' ? 'bg-[#121212]' : 'bg-white'}>Select Existing Client...</option>
                     {clients.map(c => (
-                      <option key={c.id} value={c.name}>{c.name}</option>
+                      <option key={c.id} value={c.name} className={theme === 'dark' ? 'bg-[#121212]' : 'bg-white'}>{c.name}</option>
                     ))}
-                    <option value="custom">+ Add New Client Manually</option>
+                    <option value="custom" className={theme === 'dark' ? 'bg-[#121212]' : 'bg-white'}>+ Add New Client Manually</option>
                   </select>
                 ) : (
                   <input 
                     type="text" 
                     placeholder="Client Name"
-                    className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
+                    className={`w-full border p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm ${
+                      theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                    }`}
                     value={proposal.clientName}
                     onChange={e => setProposal({...proposal, clientName: e.target.value})}
                   />
@@ -190,31 +200,37 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
                 <input 
                   type="email" 
                   placeholder="Client Email"
-                  className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
+                  className={`w-full border p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm ${
+                    theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                  }`}
                   value={proposal.clientEmail}
                   onChange={e => setProposal({...proposal, clientEmail: e.target.value})}
                 />
               </div>
               <div className="space-y-4">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                <label className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
                   <Calendar className="w-3 h-3" />
                   Dates
                 </label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400">Issue Date</span>
+                    <span className={`text-[10px] ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>Issue Date</span>
                     <input 
                       type="date" 
-                      className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-xs"
+                      className={`w-full border p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-xs ${
+                        theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                      }`}
                       value={proposal.date}
                       onChange={e => setProposal({...proposal, date: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400">Expiry Date</span>
+                    <span className={`text-[10px] ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>Expiry Date</span>
                     <input 
                       type="date" 
-                      className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-xs"
+                      className={`w-full border p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-xs ${
+                        theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                      }`}
                       value={proposal.expiryDate}
                       onChange={e => setProposal({...proposal, expiryDate: e.target.value})}
                     />
@@ -225,34 +241,40 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
 
             {/* Items */}
             <div className="space-y-4">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Scope of Work</label>
+              <label className={`text-[10px] font-bold uppercase tracking-widest ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>Scope of Work</label>
               <div className="space-y-3">
                 {proposal.items.map((item) => (
                   <div key={item.id} className="flex gap-3 items-start animate-in fade-in slide-in-from-left-2 duration-200">
                     <input 
                       type="text" 
                       placeholder="Description"
-                      className="flex-1 bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
+                      className={`flex-1 border p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm ${
+                        theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                      }`}
                       value={item.description}
                       onChange={e => updateItem(item.id, 'description', e.target.value)}
                     />
                     <input 
                       type="number" 
                       placeholder="Qty"
-                      className="w-20 bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
+                      className={`w-20 border p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm ${
+                        theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                      }`}
                       value={item.quantity}
                       onChange={e => updateItem(item.id, 'quantity', Number(e.target.value))}
                     />
                     <input 
                       type="number" 
                       placeholder="Rate"
-                      className="w-32 bg-slate-50 border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm"
+                      className={`w-32 border p-3 rounded-xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm ${
+                        theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                      }`}
                       value={item.rate}
                       onChange={e => updateItem(item.id, 'rate', Number(e.target.value))}
                     />
                     <button 
                       onClick={() => removeItem(item.id)}
-                      className="p-3 text-slate-300 hover:text-red-500 transition-colors"
+                      className={`p-3 transition-colors ${theme === 'dark' ? 'text-white/20 hover:text-red-500' : 'text-slate-300 hover:text-red-500'}`}
                       title="Remove Item"
                     >
                       <Trash2 className="w-5 h-5" />
@@ -262,7 +284,7 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
               </div>
               <button 
                 onClick={addItem}
-                className="flex items-center gap-2 text-xs font-bold text-gold-dark hover:text-gold transition-colors pt-2"
+                className="flex items-center gap-2 text-xs font-bold text-gold hover:text-gold-light transition-colors pt-2"
               >
                 <Plus className="w-4 h-4" />
                 Add Line Item
@@ -270,28 +292,32 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
             </div>
 
             {/* Totals */}
-            <div className="border-t border-slate-100 pt-8 flex justify-end">
+            <div className={`border-t pt-8 flex justify-end ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
               <div className="w-64 space-y-3">
-                <div className="flex justify-between text-sm text-slate-500">
+                <div className={`flex justify-between text-sm ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
                   <span>Subtotal</span>
                   <span>£{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                 </div>
-                <div className="flex justify-between text-sm text-slate-500">
+                <div className={`flex justify-between text-sm ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
                   <span>VAT (20%)</span>
                   <span>£{vat.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                 </div>
-                <div className="flex justify-between text-lg font-bold text-slate-900 pt-3 border-t border-slate-100">
+                <div className={`flex justify-between text-lg font-bold pt-3 border-t ${
+                  theme === 'dark' ? 'text-white border-white/5' : 'text-slate-900 border-slate-100'
+                }`}>
                   <span>Total Estimate</span>
-                  <span>£{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                  <span className="text-gold">£{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>
 
             {/* Notes */}
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Terms & Conditions</label>
+              <label className={`text-[10px] font-bold uppercase tracking-widest ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>Terms & Conditions</label>
               <textarea 
-                className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm min-h-[100px]"
+                className={`w-full border p-4 rounded-2xl focus:ring-2 focus:ring-gold outline-none transition-all text-sm min-h-[100px] ${
+                  theme === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
+                }`}
                 value={proposal.notes}
                 onChange={e => setProposal({...proposal, notes: e.target.value})}
               />
@@ -300,44 +326,56 @@ export const ProposalGenerator = ({ clients = [] }: { clients?: any[] }) => {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200">
-            <h4 className="text-sm font-bold mb-4">Proposal Status</h4>
-            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+          <div className={`p-6 rounded-2xl border ${
+            theme === 'dark' ? 'bg-[#0A0A0A] border-white/5' : 'bg-white border-slate-200 shadow-sm'
+          }`}>
+            <h4 className={`text-sm font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Proposal Status</h4>
+            <div className={`flex items-center gap-3 p-3 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
               <div className={`w-3 h-3 rounded-full ${
-                proposal.status === 'Draft' ? 'bg-slate-400' : 
+                proposal.status === 'Draft' ? 'bg-white/20' : 
                 proposal.status === 'Sent' ? 'bg-blue-500' : 
                 proposal.status === 'Accepted' ? 'bg-green-500' : 'bg-red-500'
               }`} />
-              <span className="text-sm font-bold text-slate-700">{proposal.status}</span>
+              <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white/60' : 'text-slate-600'}`}>{proposal.status}</span>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200">
-            <h4 className="text-sm font-bold mb-4">Quick Actions</h4>
+          <div className={`p-6 rounded-2xl border ${
+            theme === 'dark' ? 'bg-[#0A0A0A] border-white/5' : 'bg-white border-slate-200 shadow-sm'
+          }`}>
+            <h4 className={`text-sm font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Quick Actions</h4>
             <div className="grid grid-cols-2 gap-3">
               <button 
-                className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all group"
+                onClick={() => alert('Generating PDF for download...')}
+                className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl transition-all group ${
+                  theme === 'dark' ? 'bg-white/5 hover:bg-gold/10 hover:text-gold' : 'bg-slate-50 hover:bg-gold/10 hover:text-gold'
+                }`}
                 title="Download as PDF"
               >
-                <Download className="w-5 h-5 text-slate-400 group-hover:text-slate-900" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Download</span>
+                <Download className={`w-5 h-5 group-hover:text-gold ${theme === 'dark' ? 'text-white/20' : 'text-slate-300'}`} />
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${theme === 'dark' ? '' : 'text-slate-500'}`}>Download</span>
               </button>
               <button 
-                className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all group"
+                onClick={() => alert('Follow-up scheduled for this proposal.')}
+                className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl transition-all group ${
+                  theme === 'dark' ? 'bg-white/5 hover:bg-gold/10 hover:text-gold' : 'bg-slate-50 hover:bg-gold/10 hover:text-gold'
+                }`}
                 title="Schedule Follow-up"
               >
-                <Clock className="w-5 h-5 text-slate-400 group-hover:text-slate-900" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Follow-up</span>
+                <Clock className={`w-5 h-5 group-hover:text-gold ${theme === 'dark' ? 'text-white/20' : 'text-slate-300'}`} />
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${theme === 'dark' ? '' : 'text-slate-500'}`}>Follow-up</span>
               </button>
             </div>
           </div>
 
-          <div className="bg-gold/5 border border-gold/20 p-6 rounded-2xl">
-            <div className="flex items-center gap-2 text-gold-dark font-bold text-xs mb-2">
+          <div className={`p-6 rounded-2xl border ${
+            theme === 'dark' ? 'bg-gold/5 border-gold/20' : 'bg-gold/5 border-gold/20'
+          }`}>
+            <div className="flex items-center gap-2 text-gold font-bold text-xs mb-2">
               <Briefcase className="w-4 h-4" />
               CONVERSION TIP
             </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-white/40' : 'text-slate-500'}`}>
               Proposals sent within 24 hours of a site visit have a 40% higher acceptance rate. Use our AI to draft the scope of work based on your notes.
             </p>
           </div>

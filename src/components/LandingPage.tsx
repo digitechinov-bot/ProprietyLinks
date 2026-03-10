@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 const Navbar = ({ onOpenQuote }: { onOpenQuote: () => void }) => (
-  <nav className="fixed top-0 left-0 right-0 z-50 bg-charcoal/80 backdrop-blur-md border-b border-white/5">
+  <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-white/5">
     <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
       <button 
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -33,7 +33,7 @@ const Navbar = ({ onOpenQuote }: { onOpenQuote: () => void }) => (
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-charcoal animate-pulse" title="Live & Available Now"></div>
         </div>
         <div className="flex flex-col text-left">
-          <span className="font-serif text-lg font-bold tracking-tight leading-none">PROPRIETYLINKS</span>
+          <span className="font-serif text-lg font-bold tracking-tight leading-none text-white">PROPRIETYLINKS</span>
           <span className="text-[10px] tracking-[0.2em] text-gold uppercase font-mono">London Construction & Plumbing</span>
         </div>
       </button>
@@ -138,14 +138,14 @@ const QuickQuoteModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => 
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-2xl bg-[#1a1a1a] border border-white/10 rounded-sm overflow-hidden shadow-2xl"
+            className="relative w-full max-w-2xl bg-[#0A0A0A] border border-white/10 rounded-sm overflow-hidden shadow-2xl"
           >
             <div className="p-8 border-b border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Calculator className="w-5 h-5 text-gold" />
-                <h2 className="text-xl font-serif">London Price Estimator</h2>
+                <h2 className="text-xl font-serif text-white">London Price Estimator</h2>
               </div>
-              <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors cursor-pointer">
+              <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors cursor-pointer text-white/40 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -292,19 +292,19 @@ const QuickQuoteModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => 
 };
 
 const Hero = ({ onOpenQuote }: { onOpenQuote: () => void }) => (
-  <section className="relative min-h-screen flex items-center pt-24 md:pt-20 overflow-hidden">
+  <section className="relative min-h-screen flex items-center pt-24 md:pt-20 overflow-hidden bg-[#0A0A0A]">
     {/* Background Image with Optimization */}
     <div className="absolute inset-0 z-0">
       <img 
         src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1200" 
         alt="Luxury Bathroom Renovation in Kensington, London" 
-        className="w-full h-full object-cover opacity-40"
+        className="w-full h-full object-cover opacity-30"
         width="1200"
         height="800"
         fetchPriority="high"
         referrerPolicy="no-referrer"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/80 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent"></div>
     </div>
 
     <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-8 md:pt-12">
@@ -319,7 +319,7 @@ const Hero = ({ onOpenQuote }: { onOpenQuote: () => void }) => (
           <span className="text-[10px] uppercase tracking-[0.2em] text-gold font-mono">Gas Safe Certified # [Placeholder]</span>
         </div>
         
-        <h1 className="text-4xl md:text-7xl font-serif leading-[1.1] mb-6">
+        <h1 className="text-4xl md:text-7xl font-serif leading-[1.1] mb-6 text-white">
           Expert Construction & <br />
           <span className="text-gold-gradient italic">Plumbing Management</span> <br />
           Across London.
@@ -354,21 +354,21 @@ const Hero = ({ onOpenQuote }: { onOpenQuote: () => void }) => (
             <span className="text-[10px] uppercase tracking-widest text-white/30 font-mono mb-1">Recent Activity</span>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-medium">Emergency repair completed in Kensington</span>
+              <span className="text-xs font-medium text-white/80">Emergency repair completed in Kensington</span>
             </div>
           </div>
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-widest text-white/30 font-mono mb-1">Response Time</span>
             <div className="flex items-center gap-2">
               <Clock className="w-3 h-3 text-gold" />
-              <span className="text-xs font-medium">45 Mins Average (Central London)</span>
+              <span className="text-xs font-medium text-white/80">45 Mins Average (Central London)</span>
             </div>
           </div>
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-widest text-white/30 font-mono mb-1">Active Projects</span>
             <div className="flex items-center gap-2">
               <Hammer className="w-3 h-3 text-gold" />
-              <span className="text-xs font-medium">12 Sites across Greater London</span>
+              <span className="text-xs font-medium text-white/80">12 Sites across Greater London</span>
             </div>
           </div>
         </div>
@@ -376,7 +376,7 @@ const Hero = ({ onOpenQuote }: { onOpenQuote: () => void }) => (
     </div>
 
     <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-      <span className="text-[10px] uppercase tracking-[0.3em] font-mono">Scroll</span>
+      <span className="text-[10px] uppercase tracking-[0.3em] font-mono text-white">Scroll</span>
       <div className="w-px h-12 bg-gradient-to-b from-gold to-transparent"></div>
     </div>
   </section>
@@ -415,14 +415,14 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-32 bg-charcoal relative overflow-hidden">
+    <section id="services" className="py-32 bg-[#0A0A0A] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
           <div className="max-w-xl">
             <span className="text-gold font-mono text-xs uppercase tracking-[0.3em] mb-4 block">Certified Expertise</span>
-            <h2 className="text-3xl md:text-5xl font-serif">Bespoke Renovations & <br />Emergency Plumber Westminster</h2>
+            <h2 className="text-3xl md:text-5xl font-serif text-white">Bespoke Renovations & <br />Emergency Plumber Westminster</h2>
           </div>
-          <p className="text-white/50 max-w-sm text-sm leading-relaxed">
+          <p className="text-white/40 max-w-sm text-sm leading-relaxed">
             We specialise in high-spec finishes and technical excellence, ensuring every detail of your London property is handled with precision.
           </p>
         </div>
@@ -432,25 +432,25 @@ const Services = () => {
             <motion.div 
               key={i}
               whileHover={{ y: -10 }}
-              className="group relative h-[500px] overflow-hidden rounded-sm border border-white/5 bg-charcoal"
+              className="group relative h-[500px] overflow-hidden rounded-sm border border-white/5 bg-[#0A0A0A]"
             >
               <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
               <img 
                 src={s.img} 
                 alt={s.title} 
-                className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-110 transition-all duration-700"
+                className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-700"
                 width="400"
                 height="500"
                 loading="lazy"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent"></div>
               
               <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                <div className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center mb-6 group-hover:bg-gold group-hover:text-charcoal transition-colors">
+                <div className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center mb-6 group-hover:bg-gold group-hover:text-charcoal transition-colors text-white">
                   <s.icon className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-serif mb-3">{s.title}</h3>
+                <h3 className="text-xl font-serif mb-3 text-white">{s.title}</h3>
                 <p className="text-sm text-white/60 leading-relaxed mb-4">
                   {s.desc}
                 </p>
@@ -467,27 +467,27 @@ const Services = () => {
 };
 
 const Network = () => (
-  <section id="network" className="py-32 bg-white text-charcoal relative">
+  <section id="network" className="py-32 bg-[#0A0A0A] text-white relative overflow-hidden">
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
         <div className="relative">
-          <div className="aspect-square rounded-sm overflow-hidden">
+          <div className="aspect-square rounded-sm overflow-hidden border border-white/5">
             <img 
               src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=1000" 
               alt="Certified London Tradesmen on Site" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover opacity-80"
               width="1000"
               height="1000"
               loading="lazy"
               referrerPolicy="no-referrer"
             />
           </div>
-          <div className="absolute -bottom-10 -right-10 bg-charcoal text-white p-10 max-w-xs hidden md:block">
+          <div className="absolute -bottom-10 -right-10 bg-[#111111] text-white p-10 max-w-xs hidden md:block border border-white/5 shadow-2xl">
             <div className="flex items-center gap-4 mb-4">
               <Users className="text-gold w-8 h-8" />
               <span className="font-serif text-2xl">Hand-Picked</span>
             </div>
-            <p className="text-xs text-white/60 leading-relaxed uppercase tracking-widest">
+            <p className="text-xs text-white/40 leading-relaxed uppercase tracking-widest">
               Only the most skilled tradespeople make it into our network.
             </p>
           </div>
@@ -495,8 +495,8 @@ const Network = () => (
 
         <div>
           <span className="text-gold font-mono text-xs uppercase tracking-[0.3em] mb-4 block">The Advantage</span>
-          <h2 className="text-3xl md:text-5xl font-serif mb-8 text-charcoal">The London Trades Network</h2>
-          <p className="text-lg text-charcoal/70 mb-10 leading-relaxed">
+          <h2 className="text-3xl md:text-5xl font-serif mb-8 text-white">The London Trades Network</h2>
+          <p className="text-lg text-white/60 mb-10 leading-relaxed">
             We deploy a hand-picked team of certified specialists for every project, ensuring the right expert for the specific job. Our network includes Gas Safe registered engineers and NICEIC approved electricians.
           </p>
           
@@ -507,9 +507,9 @@ const Network = () => (
               "Master Carpenters & Joiners for Bespoke Cabinetry",
               "Specialist Tilers & Stone Masons for Luxury Finishes"
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4 border-b border-charcoal/10 pb-4">
+              <div key={i} className="flex items-center gap-4 border-b border-white/5 pb-4">
                 <CheckCircle2 className="text-gold w-5 h-5 flex-shrink-0" />
-                <span className="font-medium tracking-tight">{item}</span>
+                <span className="font-medium tracking-tight text-white/80">{item}</span>
               </div>
             ))}
           </div>
@@ -520,15 +520,15 @@ const Network = () => (
 );
 
 const Management = () => (
-  <section id="management" className="py-32 bg-charcoal overflow-hidden">
+  <section id="management" className="py-32 bg-[#0A0A0A] overflow-hidden">
     <div className="max-w-7xl mx-auto px-6">
-      <div className="bg-[#1a1a1a] p-12 md:p-20 rounded-sm border border-white/5 relative">
+      <div className="bg-[#111111] p-12 md:p-20 rounded-sm border border-white/5 relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 blur-[100px] rounded-full"></div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <span className="text-gold font-mono text-xs uppercase tracking-[0.3em] mb-4 block">Direct Oversight</span>
-            <h2 className="text-3xl md:text-5xl font-serif mb-8">Bespoke Project Management</h2>
+            <h2 className="text-3xl md:text-5xl font-serif mb-8 text-white">Bespoke Project Management</h2>
             <p className="text-lg text-white/60 mb-8 leading-relaxed">
               Moustapha personally oversees every project from start to finish. This ensures that every detail meets stringent London building standards and our own uncompromising quality benchmarks for luxury renovations.
             </p>
@@ -675,12 +675,12 @@ const Footer = () => {
   };
 
   return (
-    <footer id="contact" className="bg-charcoal pt-32 pb-24 border-t border-white/5">
+    <footer id="contact" className="bg-[#0A0A0A] pt-32 pb-24 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 mb-24">
           <div>
-            <h2 className="text-4xl md:text-5xl font-serif mb-8">Ready to start your <br /><span className="text-gold italic">next project?</span></h2>
-            <p className="text-white/50 mb-12 max-w-md leading-relaxed">
+            <h2 className="text-4xl md:text-5xl font-serif mb-8 text-white">Ready to start your <br /><span className="text-gold italic">next project?</span></h2>
+            <p className="text-white/40 mb-12 max-w-md leading-relaxed">
               Contact us today for a consultation or emergency plumbing assistance. We are available 24/7 for high-priority calls across Greater London.
             </p>
             
@@ -691,7 +691,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-widest text-white/40 font-mono mb-1">Call Us</div>
-                  <div className="text-lg font-medium">07926 325725</div>
+                  <div className="text-lg font-medium text-white">07926 325725</div>
                 </div>
               </a>
               
@@ -701,7 +701,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-widest text-white/40 font-mono mb-1">WhatsApp</div>
-                  <div className="text-lg font-medium">Message Now</div>
+                  <div className="text-lg font-medium text-white">Message Now</div>
                 </div>
               </a>
             </div>
@@ -713,24 +713,24 @@ const Footer = () => {
                 <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center text-green-500">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-serif">Enquiry Sent</h3>
-                <p className="text-white/50 text-sm">Moustapha will contact you shortly.</p>
+                <h3 className="text-2xl font-serif text-white">Enquiry Sent</h3>
+                <p className="text-white/40 text-sm">Moustapha will contact you shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-[10px] uppercase tracking-widest text-white/40 font-mono">Full Name</label>
-                    <input name="name" required type="text" aria-label="Enter your full name" className="w-full bg-transparent border-b border-white/10 py-2 focus:border-gold outline-none transition-colors" />
+                    <input name="name" required type="text" aria-label="Enter your full name" className="w-full bg-transparent border-b border-white/10 py-2 focus:border-gold outline-none transition-colors text-white" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] uppercase tracking-widest text-white/40 font-mono">Phone Number</label>
-                    <input name="phone" required type="tel" aria-label="Enter your phone number" className="w-full bg-transparent border-b border-white/10 py-2 focus:border-gold outline-none transition-colors" />
+                    <input name="phone" required type="tel" aria-label="Enter your phone number" className="w-full bg-transparent border-b border-white/10 py-2 focus:border-gold outline-none transition-colors text-white" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-widest text-white/40 font-mono">Service Required</label>
-                  <select name="service" aria-label="Select the service you require" className="w-full bg-transparent border-b border-white/10 py-2 focus:border-gold outline-none transition-colors appearance-none">
+                  <select name="service" aria-label="Select the service you require" className="w-full bg-transparent border-b border-white/10 py-2 focus:border-gold outline-none transition-colors appearance-none text-white">
                     <option className="bg-charcoal">Luxury Bathroom Fitting</option>
                     <option className="bg-charcoal">Emergency Plumbing</option>
                     <option className="bg-charcoal">Home Extension</option>
@@ -739,7 +739,7 @@ const Footer = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-widest text-white/40 font-mono">Project Details</label>
-                  <textarea name="details" rows={3} aria-label="Enter project details" className="w-full bg-transparent border-b border-white/10 py-2 focus:border-gold outline-none transition-colors resize-none"></textarea>
+                  <textarea name="details" rows={3} aria-label="Enter project details" className="w-full bg-transparent border-b border-white/10 py-2 focus:border-gold outline-none transition-colors resize-none text-white"></textarea>
                 </div>
                 <button type="submit" className="w-full gold-gradient text-charcoal py-4 font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
                   Send Enquiry
